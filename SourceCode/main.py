@@ -194,9 +194,15 @@ def Question_4():
 
 ###### 第五題 ######
 def Question_5():
-    if not os.path.exists(f"{output_dir}filter.csv"):
+    if not os.path.exists(f"{output_dir}filter.csv") \
+    or not os.path.exists(f"{output_dir}count.csv"):
         return
     df_q1 = pd.read_csv(f"{output_dir}filter.csv", error_bad_lines=False)
+    df_q2 = pd.read_csv(f"{output_dir}count.csv", error_bad_lines=False)
+    
+    for column_name, cell_content in df_q2.iloc[0].to_dict().items():
+        df_q1[column_name] = cell_content
+
     # 將第四題的篩選結果輸出為 result.csv
     df_q1.to_csv(f"{output_dir}result.csv", index=False)
 
