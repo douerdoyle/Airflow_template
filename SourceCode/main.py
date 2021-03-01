@@ -181,10 +181,13 @@ def Question_4():
     total_berth_count = 0
     for index, cell_content in enumerate(df_all['the berth total price NTD']):
         berth_price = int(cell_content)
+        berth_count = int(df_all.iloc[index]['transaction pen number'].split('車位')[1])
         if not berth_price:
             continue
+        elif not berth_count:
+            continue
         total_berth_price+=berth_price
-        total_berth_count+=int(df_all.iloc[index]['transaction pen number'].split('車位')[1])
+        total_berth_count+=berth_count
     data_dict['平均車位總價元'] = [int(total_berth_price/total_berth_count)]
 
     # 建立 count.csv 的 DataFrame

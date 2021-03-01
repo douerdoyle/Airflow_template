@@ -9,6 +9,9 @@ SourceCode 是放可以直接執行的 Python 程式；Airflow 則是放需透�
 ### 檔案說明
 ./SourceCode/func_tools.py：執行程式時所需要使用的 Function 放置處<br>
 ./SourceCode/main.py：主要執行的程式<br>
+./SourceCode/OUTPUT/filter.csv：第一個篩選之後輸出的檔案<br>
+./SourceCode/OUTPUT/count.csv：統計之後輸出的檔案<br>
+./SourceCode/OUTPUT/result.csv：第二個篩選之後輸出的檔案<br>
 
 ### 執行流程說明
 1. 請確保 Python 版本為 Python3.7 或以上
@@ -33,6 +36,10 @@ SourceCode 是放可以直接執行的 Python 程式；Airflow 則是放需透�
 ./docker-compose.py：建立 postgres 資料庫與 Airflow Webserver 兩個 Container 的docker-compose 檔<br>
 ./Airflow/dags/cathay_quiz.py：Dag 程式碼，具備下載 Open Data、處理與輸出等功能<br>
 ./Airflow/lib/func_tools.py：執行程式時所需要使用的 Function 放置處<br>
+./Airflow/OUTPUT/filter.csv：第一個篩選之後輸出的檔案<br>
+./Airflow/OUTPUT/count.csv：統計之後輸出的檔案<br>
+./Airflow/OUTPUT/result.csv：第二個篩選之後輸出的檔案<br>
+
 
 ### 執行流程說明
 1. 請確定已安裝 Docker<br>
