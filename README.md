@@ -8,7 +8,7 @@ Airflow 則是放需透過 docker-compose 建立的 Airflow workflow<br>
 
 1. 「主要用途」為「住家用」<br>
 2. 「建物型態」為「住宅大樓」<br>
-3. 「總樓層數」大於等於十三芣<br>
+3. 「總樓層數」大於等於十三樓<br>
 
 輸出為 filter.csv<br>
 
