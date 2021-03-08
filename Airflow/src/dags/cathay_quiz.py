@@ -1,4 +1,4 @@
-import time, os, traceback, math, requests, sys
+import time, os, traceback, requests, sys
 try:
     sys.path.append('/usr/local/airflow/')
 except:
@@ -8,7 +8,8 @@ from copy     import deepcopy
 from pprint   import pprint
 from datetime import datetime, timedelta
 from airflow  import DAG
-from lib.func_tools import word2num
+from lib.func_tools import Category_TFN, word2num
+pd.options.mode.chained_assignment = None  # default='warn'
 from airflow.operators import bash_operator
 from airflow.operators import python_operator
 
@@ -62,16 +63,7 @@ def Question_1():
 
 ###### 第二題與第三題 ######
 def Question_2__Question_3():
-    # 樓層中文轉數字等對照用 dict
-    floor_chn2int = {
-        '0':float('nan'),
-        float('nan'):float('nan'),
-        '地下層':float('nan'),
-    }
-    # 設定一樓到一千樓的 str 與 int 對照
-    for i in range(1, 1001):
-        floor_chn2int[f"{i}"] = i
-
+    tfn_class = Category_TFN()
     df_list = []
     file_list = os.listdir(data_dir)
     file_list.sort()
@@ -121,40 +113,8 @@ def Question_2__Question_3():
         # 新增一名為 df_name 的欄位
         df['df_name'] = f"{'_'.join(filename.split('__')[0].split('S'))}_{filename.split('__')[1].split('.')[0].split('_')[0]}_{filename.split('__')[1].split('.')[0].split('_')[-1]}"
 
-        # 處理樓層數是中文的狀況，如「三十五層」、「十三層」、「地下層」
-        for index, cell_content in enumerate(df['total floor number']):
-            index+=1
-            try:
-                # 如果樓層文字存在於 floor_chn2int 中，直接使用 floor_chn2int 的值
-                df['total floor number'][index] = deepcopy(floor_chn2int[cell_content])
-            except:
-                try:
-                    # 檢查是否能將樓層數直接 str 轉 int
-                    result = int(cell_content)
-                    # 如果是 0 樓，將其轉為 Nan
-                    if not result:
-                        result = float('nan')
-                    # 將轉出的結果存入 floor_chn2int 中
-                    floor_chn2int[cell_content] = deepcopy(result)
-                    # 如果樓層數可以直接 str2int，就直接處理
-                    df['total floor number'][index] = deepcopy(floor_chn2int[cell_content])
-                    continue
-                except:
-                    pass
-                # 處理樓層數是 Nan 的狀況
-                if type(cell_content) in [int, float]\
-                and math.isnan(cell_content):
-                    continue
-                # 處理樓層數是 「十三層」、「三十七層」的狀況
-                elif '層' in df['total floor number'][index]:
-                    floor_chn2int[df['total floor number'][index]] = deepcopy(word2num(df['total floor number'][index].replace('層', '')))
-                else:
-                    print('error_1')
-                    print(df['total floor number'][index])
-                    print(type(df['total floor number'][index]))
-                    exit()
-                df['total floor number'][index] = deepcopy(floor_chn2int[cell_content])
-        df_list.append(df)
+        # 正規化總樓層數的欄位內容，並加入 df_list 中
+        df_list.append(tfn_class.execute(filename.split('__')[1].split('.')[0].split('_')[-1], df))
 
     ###### 第三題 ######
     # 將所有資料組合在一起
